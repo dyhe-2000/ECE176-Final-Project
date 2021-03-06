@@ -1,7 +1,11 @@
 import cv2 
 import numpy as np
 import torch
+import torchvision
 import matplotlib.pyplot as plt
+import skimage
+from skimage import transform
+import PIL
 
 train_path = 'Dataset/train/'
 test_path = 'Dataset/test/'
@@ -72,9 +76,17 @@ for i in range(len(Lines1)):
     cv2.waitKey(0)
 '''
 
+transformer = torchvision.transforms.RandomCrop((128,128), padding=False, pad_if_needed=True, padding_mode='symmetric')
 for i in range(len(Lines1)):
-    image = cv2.imread(train_path + Lines1[i].split(';')[0])
-    image = cv2.resize(image, (128,128), 1, 1)
+    image = PIL.Image.open(train_path + Lines1[i].split(';')[0])
+    factor = max(128 / image.size[0], 128 / image.size[1])
+    if factor < 1:
+        factor = 1
+    image = image.resize((int(factor * image.size[0]), int(factor * image.size[1])))
+    image = transformer.forward(image)
+    image = np.array(image)
+    # cv2.imshow('hello', cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
     train_x[i] = image
     train_y[i] = Lines1[i].split(';')[7]
     
@@ -90,9 +102,13 @@ for i in range(len(Lines2)):
 '''
 
 for i in range(len(Lines2)):
-    image = cv2.imread(test_path + Lines2[i].split(';')[0])
-    image = cv2.resize(image, (128,128), 1, 1)
-    test_x[i] = image
+    image = PIL.Image.open(test_path + Lines2[i].split(';')[0])
+    factor = max(128 / image.size[0], 128 / image.size[1])
+    if factor < 1:
+        factor = 1
+    image = image.resize((int(factor * image.size[0]), int(factor * image.size[1])))
+    image = transformer.forward(image)
+    test_x[i] = np.array(image)
     test_y[i] = Lines2[i].split(';')[7]
     
 train_x = torch.from_numpy(train_x)
