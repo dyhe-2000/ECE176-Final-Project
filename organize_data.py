@@ -65,8 +65,10 @@ print('average dimension: ')
 print(sum_dim1/(train_count + test_count), sum_dim2/(train_count + test_count))
 print()
 
-train_x = np.zeros((train_count * 2, 128, 128, 3))
-train_y = np.zeros((train_count * 2,))
+#train_x = np.zeros((train_count * 2, 128, 128, 3))
+#train_y = np.zeros((train_count * 2,))
+train_x = np.zeros((train_count, 128, 128, 3))
+train_y = np.zeros((train_count,))
 
 '''
 for i in range(len(Lines1)):
@@ -85,16 +87,18 @@ for i in range(len(Lines1)):
     image = image.resize((int(factor * image.size[0]), int(factor * image.size[1])))
     image_1 = transformer.forward(image)
     image_1 = np.array(image_1)
-    image_2 = transformer.forward(image)
-    image_2 = np.array(image_2)
-    cv2.imshow('hello', cv2.cvtColor(image_1, cv2.COLOR_RGB2BGR))
-    cv2.waitKey(0)
-    cv2.imshow('hello', cv2.cvtColor(image_2, cv2.COLOR_RGB2BGR))
-    cv2.waitKey(0)
-    train_x[2*i] = image_1
-    train_y[2*i] = Lines1[i].split(';')[7]
-    train_x[2*i + 1] = image_2
-    train_y[2*i + 1] = Lines1[i].split(';')[7]
+    #image_2 = transformer.forward(image)
+    #image_2 = np.array(image_2)
+    #cv2.imshow('hello', cv2.cvtColor(image_1, cv2.COLOR_RGB2BGR))
+    #cv2.waitKey(0)
+    #cv2.imshow('hello', cv2.cvtColor(image_2, cv2.COLOR_RGB2BGR))
+    #cv2.waitKey(0)
+    train_x[i] = image_1
+    train_y[i] = Lines1[i].split(';')[7]
+    #train_x[2*i] = image_1
+    #train_y[2*i] = Lines1[i].split(';')[7]
+    #train_x[2*i + 1] = image_2
+    #train_y[2*i + 1] = Lines1[i].split(';')[7]
     
 test_x = np.zeros((test_count, 128, 128, 3))
 test_y = np.zeros((test_count,))
