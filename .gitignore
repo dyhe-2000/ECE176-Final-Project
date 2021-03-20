@@ -166,5 +166,6 @@ dmypy.json
 # Pytorch
 *.pt
 *.pth
+*.pkl
 Dataset/*
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jupyternotebooks

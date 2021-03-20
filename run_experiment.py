@@ -132,6 +132,7 @@ def train_both(model, optimizer, loader_train, loader_val, epochs=1, model_path=
             loss_main = F.cross_entropy(scores[0], y[:, 0])
             loss_auxillary = F.cross_entropy(scores[1], y[:, 1])
             loss = loss_main + loss_auxillary
+            # loss = loss_main
 
             _, preds = scores[0].max(1)
             num_correct += (preds == y[:, 0]).sum()
@@ -258,19 +259,19 @@ def ttt_online(model, loader, loader_spinned, optimizer):
     return evaluate_main(model, loader)
 
 
-
-from models import ResNetMainBranch
 '''
+from models import ResNetMainBranch
+
 # Experiment 1: Train a baseline ResNet18: no branch
 lr = 1e-3
 wd = 1e-5
-from models import ResNetMainBranch
-model = ResNetMainBranch()
+from models import ResNetMainBranch, ResNetTwoBranch
+model = ResNetTwoBranch()
 optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 train_main(model, optimizer, train_loader, val_loader, epochs=50, model_path='model.pth', early_stop_patience=5)
 
 model_path = 'model.pth'
-model = ResNetMainBranch()
+model = ResNetTwoBranch()
 params = torch.load(model_path)
 model.load_state_dict(params)
 model = model.to(device=device)
@@ -281,14 +282,14 @@ print(loss, acc)
 
 # Experiment 2: Train a ResNet18 with auxillary branch
 from models import ResNetTwoBranch
-'''
-lr = 5e-4
+
+lr = 1e-3
 wd = 1e-5
 from models import ResNetTwoBranch
 model = ResNetTwoBranch()
 optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 train_both(model, optimizer, train_rotate_loader, train_rotate_loader, epochs=50, model_path='exp_2_model.pth', early_stop_patience=5)
-'''
+
 
 model_path = 'exp_2_model.pth'
 model = ResNetTwoBranch()
